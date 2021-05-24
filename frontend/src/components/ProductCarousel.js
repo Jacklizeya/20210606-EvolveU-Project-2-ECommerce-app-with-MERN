@@ -21,7 +21,7 @@ export default function ProductCarousel() {
     return (
         loading? <Loader> </Loader> : error? <Message variant="danger"> {error} </Message>: 
         (<div>
-            <Carousel pause="hover" className="bg-dark" >
+            <Carousel pause="hover" className="bg-success" >
                 {
                     products.map(product=> (
                         <Carousel.Item key={product._id}> 
