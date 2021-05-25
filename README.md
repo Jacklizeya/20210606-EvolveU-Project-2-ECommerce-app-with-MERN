@@ -1,7 +1,7 @@
-Heroku Access
+# Heroku Access
 https://threed2021store.herokuapp.com/
 
-// To run it locally:
+## To run it locally:
 
 1. go to folder 3d2021store
    nvm use 14
