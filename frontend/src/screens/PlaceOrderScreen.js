@@ -17,7 +17,7 @@ export default function PlaceOrderScreen({history}) {
     cart.itemsPrice = cart.cartItems.reduce((acc, item) => {return Number(acc + item.price * item.qty)}, 0)
     cart.shippingPrice = (cart.itemsPrice < 1000 ? Number((cart.itemsPrice * 0.1).toFixed(2)) : 0)
     cart.taxPrice = Number((0.05 * cart.itemsPrice).toFixed(2))
-    cart.totalPrice = (cart.itemsPrice + cart.shippingPrice + cart.taxPrice)
+    cart.totalPrice = Number((cart.itemsPrice + cart.shippingPrice + cart.taxPrice).toFixed(2))
 
     const orderCreate = useSelector(state => state.orderCreate)
     const {order, success, error} = orderCreate
