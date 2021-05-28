@@ -127,7 +127,7 @@ export default function ProductEditScreen( {match, history} ) {
                         
                         <Form.Control as="select" value={category} onChange={e => setCategory(e.target.value)}>
                                             
-                                <option value="printer"> select </option>
+                                <option value=""> select </option>
                                  <option value="printer"> printer </option>
                                  <option value="scanner"> scanner </option>
                                  <option value="filament"> filament </option>
