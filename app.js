@@ -35,8 +35,8 @@ if (process.env.NODE_ENV === "development") {
 // const __dirname = path.resolve()
 app.use("/uploads", express.static(path.join(__dirname, "/uploads")))
 app.use(express.static((process.env.NODE_ENV === "production")? ("./frontend/build") : (path.join(__dirname, 'public'))))
-//  addinng this line in the deploy + refresh case, so it does not get lost when it is not started at the HomePage
-app.get("*", (req, res) => {res.sendFile(path.resolve(__dirname, "/frontend/build", "index.html"))})
+//  addinng this line in the deploy + refresh case, so it does not get lost when it is not started at the HomePage, this is a file path format
+app.get("*", (req, res) => {res.sendFile(path.resolve(__dirname, "./frontend/build", "index.html"))})
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');;
