@@ -124,7 +124,18 @@ export default function ProductEditScreen( {match, history} ) {
 
                     <Form.Group controlId="category">
                         <Form.Label> Category </Form.Label>
-                        <Form.Control type="text" placeholder="Enter category" value={category} onChange={(e)=>{setCategory(e.target.value)}}/> 
+                        
+                        <Form.Control as="select" value={category} onChange={e => setCategory(e.target.value)}>
+                                            
+                                <option value="printer"> select </option>
+                                 <option value="printer"> printer </option>
+                                 <option value="scanner"> scanner </option>
+                                 <option value="filament"> filament </option>
+                                 <option value="pen"> pen </option>
+                                 <option value="figure"> figure </option>
+                                 <option value="accessory"> accessory </option>
+                                                
+                        </Form.Control>
                     </Form.Group> 
 
                     <Form.Group controlId="countInStock">
