@@ -31,12 +31,7 @@ if (process.env.NODE_ENV === "development") {
     app.use(morgan("dev"))
 } 
 
-//   this is the key for build folder
-// const __dirname = path.resolve()
-app.use("/uploads", express.static(path.join(__dirname, "/uploads")))
-app.use(express.static((process.env.NODE_ENV === "production")? ("./frontend/build") : (path.join(__dirname, 'public'))))
-//  addinng this line in the deploy + refresh case, so it does not get lost when it is not started at the HomePage, this is a file path format
-app.get("*", (req, res) => {res.sendFile(path.resolve(__dirname, "./frontend/build", "index.html"))})
+
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');;
@@ -46,14 +41,19 @@ app.use(express.json()); // This will allow us to access json data in body
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
-
-
+//  The sequence really matters
+//  first option is backend router
 app.get("/api/config/paypal", (req, res) => {console.log("paypal api");res.send(process.env.PAYPAL_CLIENT_ID)})
 app.use('/api/products', productsRoutes);
 app.use('/api/users', usersRoutes);
 app.use('/api/orders', orderRoutes);
 app.use('/api/upload', uploadRoutes)
-
+//   this is the key for build folder in the frontend
+// const __dirname = path.resolve()
+app.use("/uploads", express.static(path.join(__dirname, "/uploads")))
+app.use(express.static((process.env.NODE_ENV === "production")? ("./frontend/build") : (path.join(__dirname, 'public'))))
+// //  addinng this line in the deploy + refresh case, so it does not get lost when it is not started at the HomePage, this is a file path format
+app.get("*", (req, res) => {res.sendFile(path.resolve(__dirname, "./frontend/build", "index.html"))})
 
 
 
