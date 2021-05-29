@@ -38,7 +38,7 @@ const HomeScreen = ({match}) => {
         <div>  
             <Meta/>
             {!keyword ? <ProductCarousel/> : <Link to="/" className="btn btn-light">Go Back</Link>}
-            <h1>Lastest product </h1>
+            <h1>Latest Products</h1>
             {loading? <Loader/>: error? <Message variant="danger"> {error} </Message> : 
             (
             <div>
