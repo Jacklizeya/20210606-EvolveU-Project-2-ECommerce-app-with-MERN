@@ -4,7 +4,7 @@ import React from 'react'
 import { LinkContainer } from "react-router-bootstrap"
 import { Navbar, Nav, Container, NavDropdown } from "react-bootstrap"
 import { useDispatch, useSelector } from "react-redux"
-import { SearchBox } from "./SearchBox"
+import SearchBox from "./SearchBox"
 import { logout } from "../actions/userAction"
 import { Route } from "react-router-dom"
 
