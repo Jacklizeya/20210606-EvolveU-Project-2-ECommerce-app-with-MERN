@@ -14,81 +14,50 @@ import {ORDER_PAY_RESET, ORDER_DELIVER_RESET} from "../constants/orderConstants"
 
 
 export default function OrderScreen({match, history}) {
+    console.log("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
 
-    const orderId = match.params.id
-    console.log(`orderId is ${orderId}`)
+    // set up all the initial state
+    const orderId = match.params.id; console.log(`orderId is ${orderId}`)
     const [sdkReady, setSdkReady] = useState(false)
     const {order, loading, error} = useSelector(state => state.orderDetails)
     const { loading : loadingPay, success: successPay} = useSelector(state => state.orderPay)  //this is second bug for 20210520
     const { loading:  loadingDeliver, success: successDeliver} = useSelector(state => state.orderDeliver)  //this is second bug for 20210520
-
     const userLogin = useSelector(state => state.userLogin)
     const {userInfo} = userLogin
 
     const dispatch = useDispatch()
 
+    
     useEffect(()=>{ 
-            if (!userInfo) {history.push("/login")}
-
-            const addPayPalScript = async() => {
-                console.log("order screen paypal api")
-                const {data: clientId} = await axios("/api/config/paypal")
-                // sdk is software development kit? Insert 3-rd party script into HTML
-                const script = document.createElement("script")
-                script.type = "text/javascript"
-                script.async = true
-                script.src = `https://www.paypal.com/sdk/js?client-id=${clientId}`
-                script.onload = () => {setSdkReady(true)}
-                document.body.appendChild(script)
-                console.log("script is ready")}
-
-            console.log(`order is ${order}`)
-            console.log(`orderId is ${orderId}`)
-
-            // I reoganize this part, we do not need order here! otherwise it is infinite loop          
-            
-            // if (!order || successPay || successDeliver) {
-            console.log("entering the dispatch section")
-            dispatch({type: ORDER_PAY_RESET}) // IF you donot do this, it will not detect the delete  state change, then it won't re-render
-            dispatch({type: ORDER_DELIVER_RESET}) // 
-            console.log(`going to dispatch ${orderId}`)
-            dispatch(getOrderDetails(orderId))
-
-            if (!order.isPaid) {if (!window.paypal) {addPayPalScript()} else {setSdkReady(true)}}
-            // } else if (!order.isPaid) {
-            //     console.log("entering elseif")
-            //     
-            //  } 
-
-                // // we want to reset the screen
-                // if (!order || successPay || successDeliver) {
-                //     dispatch({type: ORDER_PAY_RESET})
-                //     dispatch({type: ORDER_DELIVER_RESET})
-                //     dispatch(getOrderDetails(orderId))
-                // } else if (!order.isPaid) {
-                //     if (!window.paypal) {addPayPalScript()} else {setSdkReady(true)}
-                // }
+        if (!userInfo) {history.push("/login")}
+        
+        const addPayPalScript = async() => {
+        console.log("order screen paypal api")
+        const {data: clientId} = await axios("/api/config/paypal")
+        // sdk is software development kit? Insert 3-rd party script into HTML
+        const script = document.createElement("script")
+        script.type = "text/javascript"
+        script.async = true
+        script.src = `https://www.paypal.com/sdk/js?client-id=${clientId}`
+        script.onload = () => {setSdkReady(true)}
+        document.body.appendChild(script)}
+        
+        
+        // I reoganize this part, we do not need order here! otherwise it is infinite loop 
+        // tutorial makes it too complicated
+        dispatch({type: ORDER_PAY_RESET}) 
+        dispatch({type: ORDER_DELIVER_RESET}) 
+        dispatch(getOrderDetails(orderId))
+        if (!order.isPaid) {if (!window.paypal) {addPayPalScript()} else {setSdkReady(true)}}
+        }, [orderId, dispatch, successPay, successDeliver])
 
 
-
-
-            }, [
-                orderId, 
-                dispatch, 
-                successPay, 
-                successDeliver,
-                
-                ])
-
-
-
-    const successPaymentHanlder = (paymentResult) => {
+    const successPaymentHandler = (paymentResult) => {
         console.log("paymentResult", paymentResult)
         dispatch(payOrder(orderId, paymentResult))
     }
 
     const deliverHandler = () => {
-        
         dispatch(deliverOrder(order))
     }
 
@@ -193,10 +162,10 @@ export default function OrderScreen({match, history}) {
                                     </Row>
                                 </ListGroup.Item>
 
-                                {!order.isPaid && (
+                                {userInfo && !order.isPaid && (
                                     <ListGroup.Item>
                                         {loadingPay && <Loader/>}
-                                        {!sdkReady ? <Loader/>  : (<PayPalButton amount={order.totalPrice} onSuccess = {successPaymentHanlder}/> )}
+                                        {!sdkReady ? <Loader/>  : (<PayPalButton amount={order.totalPrice} onSuccess = {successPaymentHandler}/> )}
                                     </ListGroup.Item>)
                                 }
 
