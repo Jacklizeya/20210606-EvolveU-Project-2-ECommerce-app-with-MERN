@@ -10,11 +10,11 @@ import {PRODUCT_LIST_REQUEST, PRODUCT_LIST_SUCCESS, PRODUCT_LIST_FAIL,
 import axios from "axios"
 
 
-export const listProducts = (keyword = "", pageNumber = "") => async(dispatch) => {
+export const listProducts = (keyword = "", pageNumber = "", category= "") => async(dispatch) => {
     try {
         // console.log("enter thunk")
         dispatch({type: PRODUCT_LIST_REQUEST})  //start loading
-        const {data} = await axios.get(`/api/products?keyword=${keyword}&pageNumber=${pageNumber}`)
+        const {data} = await axios.get(`/api/products?keyword=${keyword}&pageNumber=${pageNumber}&category=${category}`)
         dispatch({type: PRODUCT_LIST_SUCCESS, payload: data}) // start displaying
         // console.log("exit thunk")
     }

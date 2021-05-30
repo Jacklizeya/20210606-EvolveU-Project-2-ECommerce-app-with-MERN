@@ -30,9 +30,17 @@ const Header = () => {
             <Navbar bg="primary" variant="dark" expand="lg" collapseOnSelect>
                 <Container>
 
-                    <LinkContainer to="/">
-                        <Navbar.Brand> 3D Store </Navbar.Brand>
-                    </LinkContainer>
+
+                        <LinkContainer to='/'>
+                            <Navbar.Brand>
+                            <img src='/images/4Glogo.png' alt='Image' height='100' width='450' className='ml-sm-3'></img>
+                            </Navbar.Brand>
+                        </LinkContainer>
+
+                        <LinkContainer to="/"> 
+                            <Navbar.Brand> {/* placeholder*/} </Navbar.Brand>
+                        </LinkContainer>
+                    
 
                     <Navbar.Toggle aria-controls="basic-navbar-nav" />
                     <Navbar id="basic-navbar-nav">

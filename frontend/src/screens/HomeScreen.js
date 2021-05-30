@@ -1,10 +1,10 @@
 // generate by race
 
-import React, { useEffect} from 'react'
+import React, { useEffect, useState} from 'react'
 import Meta from "../components/Meta"
 import {useDispatch, useSelector} from "react-redux"
 // import products from "../products" *** data will come from backend later
-import {Row, Col} from "react-bootstrap"
+import {Row, Col, Form} from "react-bootstrap"
 // so many modular component from bootstrap.js, also boostrap.css
 import Product from "../components/Product"
 import {listProducts} from "../actions/productAction"
@@ -21,6 +21,7 @@ const HomeScreen = ({match}) => {
     const dispatch = useDispatch()
     const keyword = match.params.keyword
     const pageNumber = match.params.pageNumber || 1
+    const [category, setCategory] = useState("")
 
     const productList = useSelector(state => state.productList)
     const {loading, error, products, page, pages} = productList // destruction a good way to extra data
@@ -29,8 +30,8 @@ const HomeScreen = ({match}) => {
         console.log("entering homescreenuseEffect")
         // const fetchProducts = async () => {const {data} = await axios.get("/api/products"); setProducts(data)}
         // fetchProducts(); This is phased out as we want to integrate Redux
-        dispatch(listProducts(keyword, pageNumber))
-    }, [dispatch, keyword, pageNumber])
+        dispatch(listProducts(keyword, pageNumber, category))
+    }, [dispatch, keyword, pageNumber, category])
      
     // dispatch the async function middle ware, dispatch as dependency to avoid warning
 
@@ -38,7 +39,21 @@ const HomeScreen = ({match}) => {
         <div>  
             <Meta/>
             {!keyword ? <ProductCarousel/> : <Link to="/" className="btn btn-light">Go Back</Link>}
-            <h1>Lastest product </h1>
+            <br/>
+            <Form.Group controlId="category" class="w-25">   
+                <Form.Label> Select Category </Form.Label>
+                <Form.Control as="select" value={category} onChange={e => setCategory(e.target.value)}>        
+                        <option value=""> Show All </option>
+                        <option value="printer"> printer </option>
+                        <option value="scanner"> scanner </option>
+                        <option value="filament"> filament </option>
+                        <option value="pen"> pen </option>
+                        <option value="figure"> figure </option>
+                        <option value="accessory"> accessory </option>
+                                        
+                </Form.Control>
+            </Form.Group> 
+
             {loading? <Loader/>: error? <Message variant="danger"> {error} </Message> : 
             (
             <div>
