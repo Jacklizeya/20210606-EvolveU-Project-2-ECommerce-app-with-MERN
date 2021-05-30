@@ -8,14 +8,14 @@ import {listTopProducts} from "../actions/productAction"
 
 
 export default function ProductCarousel() {
-    console.log("Entering ProductCarousel")
+    // console.log("Entering ProductCarousel")
     const dispatch = useDispatch()
     const productTopRated = useSelector(state => state.productTopRated)
-    console.log(productTopRated)
+    // console.log(productTopRated)
     const {loading, error, products} = productTopRated
-    console.log("products", products)
+    // console.log("products", products)
     useEffect(()=>{
-        console.log("I am going to dispatch listtop products")
+        // console.log("I am going to dispatch listtop products")
         dispatch(listTopProducts())}, [dispatch])
 
     return (
