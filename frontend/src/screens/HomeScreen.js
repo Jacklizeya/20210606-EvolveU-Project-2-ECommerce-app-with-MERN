@@ -40,7 +40,7 @@ const HomeScreen = ({match}) => {
             <Meta/>
             {!keyword ? <ProductCarousel/> : <Link to="/" className="btn btn-light">Go Back</Link>}
             <br/>
-            <Form.Group controlId="category" class="w-25">   
+            <Form.Group controlId="category" className="w-25">   
                 <Form.Label> Select Category </Form.Label>
                 <Form.Control as="select" value={category} onChange={e => setCategory(e.target.value)}>        
                         <option value=""> Show All </option>
