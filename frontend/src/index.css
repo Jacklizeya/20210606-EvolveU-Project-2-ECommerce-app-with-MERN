@@ -46,3 +46,13 @@ h2 {
 .carousel a {
   margin: 0 auto
 }
+#numI{
+  font-size: small;
+  color: yellow;
+  background: rgb(161, 197, 63);
+  border-radius: 50%;
+  padding-left: 1ch;
+  padding-right: 1ch;
+
+  
+}
