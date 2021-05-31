@@ -22,6 +22,8 @@ const Header = () => {
 
     const cart = useSelector((state) => state.cart);
     const { cartItems } = cart;
+    let totalItem = cartItems.reduce((acc, item) => acc + Number(item.qty), 0);
+
 
     // attempt bug fix for video 50
 
@@ -31,16 +33,16 @@ const Header = () => {
                 <Container>
 
 
-                        <LinkContainer to='/'>
-                            <Navbar.Brand>
+                    <LinkContainer to='/'>
+                        <Navbar.Brand>
                             <img src='/images/4Gicon.png' alt='Image' height='100' width='150' className='ml-sm-3'></img>
-                            </Navbar.Brand>
-                        </LinkContainer>
+                        </Navbar.Brand>
+                    </LinkContainer>
 
-                        <LinkContainer to="/"> 
-                            <Navbar.Brand> 3D Store </Navbar.Brand>
-                        </LinkContainer>
-                    
+                    <LinkContainer to="/">
+                        <Navbar.Brand> 3D Store </Navbar.Brand>
+                    </LinkContainer>
+
 
                     <Navbar.Toggle aria-controls="basic-navbar-nav" />
                     <Navbar id="basic-navbar-nav">
@@ -55,7 +57,7 @@ const Header = () => {
                                 <Nav.Link>
 
                                     {/* <p>{cartItems.length}</p> */}
-                                    <i className="fas fa-shopping-cart"> </i>  {cartItems.length >= 1 && <span id='numI'>{cartItems.length}</span>}
+                                    <i className="fas fa-shopping-cart"> </i>  {cartItems.length >= 1 && <span id='numI'>{totalItem}</span>}
                                 </Nav.Link>
                             </LinkContainer>
 
