@@ -33,12 +33,12 @@ const Header = () => {
 
                         <LinkContainer to='/'>
                             <Navbar.Brand>
-                            <img src='/images/4Glogo.png' alt='Image' height='100' width='450' className='ml-sm-3'></img>
+                            <img src='/images/4Gicon.png' alt='Image' height='100' width='150' className='ml-sm-3'></img>
                             </Navbar.Brand>
                         </LinkContainer>
 
                         <LinkContainer to="/"> 
-                            <Navbar.Brand> {/* placeholder*/} </Navbar.Brand>
+                            <Navbar.Brand> 3D Store </Navbar.Brand>
                         </LinkContainer>
                     
 
