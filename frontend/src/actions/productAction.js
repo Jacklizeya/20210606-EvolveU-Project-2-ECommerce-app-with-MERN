@@ -5,6 +5,7 @@ import {PRODUCT_LIST_REQUEST, PRODUCT_LIST_SUCCESS, PRODUCT_LIST_FAIL,
     PRODUCT_UPDATE_REQUEST, PRODUCT_UPDATE_SUCCESS, PRODUCT_UPDATE_FAIL, 
     PRODUCT_CREATE_REVIEW_REQUEST, PRODUCT_CREATE_REVIEW_SUCCESS, PRODUCT_CREATE_REVIEW_FAIL, 
     PRODUCT_TOP_REQUEST, PRODUCT_TOP_SUCCESS, PRODUCT_TOP_FAIL,
+    PRODUCT_UPDATE_INSTOCK_REQUEST, PRODUCT_UPDATE_INSTOCK_SUCCESS, PRODUCT_UPDATE_INSTOCK_FAIL,
 } from "../constants/productConstants"
 
 import axios from "axios"
@@ -149,3 +150,42 @@ export const listTopProducts = () => async(dispatch) => {
             : error.message}) // start displaying
     }
 }
+
+export const updateProductInStock = (product) => async (dispatch, getState) => {
+    try {
+      dispatch({
+        type: PRODUCT_UPDATE_INSTOCK_REQUEST,
+      });
+  
+      const {
+        userLogin: { userInfo },
+      } = getState();
+  
+      const config = {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${userInfo.token}`,
+        },
+      };
+  
+      const { data } = await axios.put(
+        `/api/products/${product._id}/stock`,
+        product,
+        config
+      );
+  
+      dispatch({
+        type: PRODUCT_UPDATE_INSTOCK_SUCCESS,
+        payload: data,
+      });
+    } catch (error) {
+      dispatch({
+        type: PRODUCT_UPDATE_INSTOCK_FAIL,
+        payload:
+          error.response && error.response.data.message
+            ? error.response.data.message
+            : error.message,
+      });
+    }
+  };
+  
