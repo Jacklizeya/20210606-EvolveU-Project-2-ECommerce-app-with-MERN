@@ -2,6 +2,7 @@ import {
     ORDER_CREATE_REQUEST, 
     ORDER_CREATE_SUCCESS, 
     ORDER_CREATE_FAIL,
+    ORDER_CREATE_RESET,
     ORDER_DETAILS_REQUEST, 
     ORDER_DETAILS_SUCCESS, 
     ORDER_DETAILS_FAIL,
@@ -20,28 +21,33 @@ import {
     ORDER_DELIVER_FAIL,
     
 } from "../constants/orderConstants"
-
+import {CART_RESET} from "../constants/cartConstants"
 import axios from "axios"
               
-export const createOrder = (order) => async (dispatch, getState) => {
+export const createOrder = (cart) => async (dispatch, getState) => {
     console.log("Entering Thunk")
     try {
         // Initiate request
+        console.log("I am going to create order")
         console.log("entering the try path")    
         dispatch({ type: ORDER_CREATE_REQUEST })
         console.log("1st dispatch sent")
         // This is double destruction
         const  {userLogin: {userInfo}} = getState() 
         console.log(`userInfo`, userInfo)
-        console.log("order is" , order)
+        console.log("The cart is" , cart)
         console.log("token", userInfo.token)
         // can I try useSelector here instead of getState? no, this is a function, not React Component
         // that is why I have to use GetState to get more info
         // Make real request to database
-        const {data} = await axios.post("/api/orders", order, {headers : {"Content-Type": "application/json", "Authorization": `Bearer ${userInfo.token}`}} )
+        const {data} = await axios.post("/api/orders", cart, {headers : {"Content-Type": "application/json", "Authorization": `Bearer ${userInfo.token}`}} )
         console.log("reply from database", data)
         dispatch({ type: ORDER_CREATE_SUCCESS, payload : data})
-        console.log("I updated Redux state")
+        console.log("order_create_success")
+        // clean up the cart since order is placed
+        dispatch({ type: CART_RESET})
+        localStorage.setItem("cartItems", "")
+        console.log("I finish create Order")
     } catch (error) {
         console.log("entering error path")
         dispatch({type: ORDER_CREATE_FAIL, payload: error.response && error.response.data.message
@@ -67,8 +73,10 @@ export const getOrderDetails = (id) => async (dispatch, getState) => {
         console.log(`/api/orders/${id}`)
         const {data} = await axios.get(`/api/orders/${id}` , {headers : {"Content-Type": "application/json", "Authorization": `Bearer ${userInfo.token}`}} )
         console.log("reply from database get order detail by id", data)
+        
         dispatch({ type: ORDER_DETAILS_SUCCESS, payload : data})
-        console.log("I updated Redux state")
+        
+        console.log("order details updated")
     } catch (error) {
         console.log("entering error path")
         dispatch({type: ORDER_DETAILS_FAIL, payload: error.response && error.response.data.message
@@ -91,6 +99,7 @@ export const payOrder = (orderId, paymentResult) => async (dispatch, getState) =
         const {data} = await axios.put(`/api/orders/${orderId}/pay`, paymentResult , {headers : {"Content-Type": "application/json", "Authorization": `Bearer ${userInfo.token}`}} )
         console.log("reply from database", data)
         dispatch({ type: ORDER_PAY_SUCCESS, payload : data})
+        dispatch({ type: ORDER_CREATE_RESET})
         console.log("I updated Redux state")
     } catch (error) {
         console.log("entering error path")

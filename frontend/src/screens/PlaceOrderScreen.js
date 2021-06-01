@@ -22,19 +22,12 @@ export default function PlaceOrderScreen({history}) {
     const orderCreate = useSelector(state => state.orderCreate)
     const {order, success, error} = orderCreate
 
-    useEffect(()=>{
-        if (success) {
-            console.log("success")
-            history.push(`order/${order._id}`)
-            console.log("success")
-        }
-    }, [history, success, order])
 
 
     // convert cart in Redux to Order in MongoDB
     const dispatch = useDispatch( )
-    const placeOrderHandler = (e) => {
-        console.log("Clicked place the order handler")
+    const placeOrderHandler = () => {
+        console.log("entering placeorder handler")
         dispatch(createOrder({
             orderItems: cart.cartItems,
             shippingAddress: cart.shippingAddress,
@@ -44,7 +37,17 @@ export default function PlaceOrderScreen({history}) {
             taxPrice: cart.taxPrice,
             totalPrice: cart.totalPrice
         }))
+        console.log("going to createOrder")
         }
+
+        console.log("success on line24", success)
+        useEffect(()=>{
+            if (success) {
+                console.log("success and order", success, order)
+                history.push(`/order/${order._id}`)
+                console.log("jump to new page is done")
+            }
+        }, [history, success])
 
 
     return (

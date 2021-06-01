@@ -8,8 +8,10 @@ import { PayPalButton } from "react-paypal-button-v2"
 
 import Loader from "../components/Loader"
 import Message from "../components/Message"
-import { getOrderDetails, payOrder, deliverOrder } from "../actions/orderAction"
-import { ORDER_PAY_RESET, ORDER_DELIVER_RESET, ORDER_LIST_MY_RESET, } from "../constants/orderConstants";
+
+import {getOrderDetails, payOrder, deliverOrder} from "../actions/orderAction" 
+import {ORDER_PAY_RESET, ORDER_DELIVER_RESET, ORDER_LIST_MY_RESET} from "../constants/orderConstants"
+
 import { PRODUCT_UPDATE_INSTOCK_RESET } from '../constants/productConstants';
 
 import { removeFromCart } from '../actions/cartAction';
@@ -26,44 +28,49 @@ export default function OrderScreen({ match, history }) {
     const { order, loading, error } = useSelector(state => state.orderDetails)
     const { loading: loadingPay, success: successPay } = useSelector(state => state.orderPay)  //this is second bug for 20210520
     const userLogin = useSelector(state => state.userLogin)
-    const { userInfo } = userLogin
+
+    const {userInfo} = userLogin
     const cart = useSelector((state) => state.cart);
     const { cartItems } = cart;
     const [countInStock, setCountInStock] = useState(0);
+
     const dispatch = useDispatch()
 
-    const productUpdateInStock = useSelector((state) => state.productUpdateInStock);
-    const { success: successInStockUpdate } = productUpdateInStock;
-
-    const orderDeliver = useSelector((state) => state.orderDeliver);
-    const { loading: loadingDeliver, success: successDeliver } = orderDeliver;
-
-
-    useEffect(() => {
-        if (!userInfo) { history.push("/login") }
-
-        const addPayPalScript = async () => {
-            console.log("order screen paypal api")
-            const { data: clientId } = await axios("/api/config/paypal")
-            // sdk is software development kit? Insert 3-rd party script into HTML
-            const script = document.createElement("script")
-            script.type = "text/javascript"
-            script.async = true
-            script.src = `https://www.paypal.com/sdk/js?client-id=${clientId}`
-            script.onload = () => { setSdkReady(true) }
-            document.body.appendChild(script)
-        }
-
-
+    
+    useEffect(()=>{ 
+        console.log("xxxxxxxxxxxxxxxxxxxxxentering useEffect once")
+        if (!userInfo) {history.push("/login")}
+        
+        const addPayPalScript = async() => {
+        console.log("order screen paypal api")
+        const {data: clientId} = await axios("/api/config/paypal")
+        // sdk is software development kit? Insert 3-rd party script into HTML
+        const script = document.createElement("script")
+        script.type = "text/javascript"
+        script.async = true
+        script.src = `https://www.paypal.com/sdk/js?client-id=${clientId}`
+        script.onload = () => {setSdkReady(true)}
+        document.body.appendChild(script)}
+        
+        
         // I reoganize this part, we do not need order here! otherwise it is infinite loop 
         // tutorial makes it too complicated
-        if (!order || successPay || successDeliver || order._id !== orderId) {
-            dispatch({ type: ORDER_PAY_RESET })
-            dispatch({ type: ORDER_DELIVER_RESET })
-            dispatch(getOrderDetails(orderId))
-            dispatch({ type: ORDER_LIST_MY_RESET });
-        } else if (!order.isPaid) { if (!window.paypal) { addPayPalScript() } else { setSdkReady(true) } }
-
+        dispatch({type: ORDER_PAY_RESET}) 
+        dispatch({type: ORDER_DELIVER_RESET}) 
+        dispatch({type: ORDER_LIST_MY_RESET });
+        console.log("line 50", sdkReady)
+        dispatch(getOrderDetails(orderId)) //async 74 continue here
+        console.log("ready to deal with paypal after get")
+        // console.log("order", order, order.isPaid)
+        // if (!order || !order.isPaid) {
+            console.log("order is not paid, going to setup SDK")
+            if (!window.paypal) {addPayPalScript(); console.log("sdkReady", sdkReady)} 
+            // else {setSdkReady(true)} This is the old one, seems not doing anything
+            console.log("line 56", "sdkReady", sdkReady)
+            setSdkReady(true)
+            console.log("line 58", "sdkReady", sdkReady)
+        // }
+        
 
         if (successInStockUpdate) {
             console.log('PRODUCT_UPDATE_INSTOCK_RESET');
@@ -92,18 +99,12 @@ export default function OrderScreen({ match, history }) {
             });
             dispatch({ type: ORDER_LIST_MY_RESET });
         }
-    }, [
-        history,
-        userInfo,
-        dispatch,
-        orderId,
-        successPay,
-        successDeliver,
-        order,
-        cartItems,
-        countInStock,
-        successInStockUpdate,
-    ]);
+
+
+        }, [orderId, dispatch, successPay, successDeliver
+           ,history, userInfo, cartItems, countInStock, successInStockUpdate])
+
+
 
     const successPaymentHandler = (paymentResult) => {
         console.log("paymentResult", paymentResult)

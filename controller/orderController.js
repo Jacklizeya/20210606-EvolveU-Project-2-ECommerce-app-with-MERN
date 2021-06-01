@@ -7,7 +7,7 @@ const mongoose = require("mongoose")
 // @route  POST API/orders
 // @access Private
 const addOrderItems = asyncHandler (async (req, res, next) => {
-    console.log("entering backend controller add order items")
+    console.log("%%%%%%%%%entering backend controller add order items")
     const {orderItems, shippingAddress, paymentMethod, itemsPrice, taxPrice, shippingPrice, totalPrice} = req.body
     if (orderItems && orderItems.length ===0 ) { res.status(400); throw new Error ("no order Items"); return } 
     else {
@@ -22,7 +22,9 @@ const addOrderItems = asyncHandler (async (req, res, next) => {
             user: req.user._id
         })
         const createdOrder = await order.save()
+        console.log("the created Order is ***********", createdOrder)
         res.status(201).json(createdOrder)
+        console.log("I sent the reply back to frontend")
     }
     })
 

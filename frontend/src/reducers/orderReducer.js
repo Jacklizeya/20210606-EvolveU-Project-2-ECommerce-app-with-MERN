@@ -2,6 +2,7 @@
         ORDER_CREATE_REQUEST, 
         ORDER_CREATE_SUCCESS, 
         ORDER_CREATE_FAIL,
+        ORDER_CREATE_RESET,
         ORDER_DETAILS_REQUEST, 
         ORDER_DETAILS_SUCCESS, 
         ORDER_DETAILS_FAIL,
@@ -33,7 +34,10 @@ export const orderCreateReducer = (state = {} , action) => {
         }
         case ORDER_CREATE_FAIL : {
             return {loading: false, error: action.payload}
-        }       
+        }     
+        case ORDER_CREATE_RESET : {
+            return {}
+        }   
         default: return state
     }
 }
@@ -43,7 +47,7 @@ export const orderDetailsReducer = (state = {order: [], shippingAddress: {}, loa
     switch(action.type) {
         case ORDER_DETAILS_REQUEST    : {
             console.log("DETAILS request")
-            return {...state, loading: true}
+            return {loading: true}
         }
         case ORDER_DETAILS_SUCCESS : {
             return { order: action.payload, loading: false }
