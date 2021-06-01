@@ -21,7 +21,7 @@ import {
     ORDER_DELIVER_FAIL,
     
 } from "../constants/orderConstants"
-import {CART_RESET} from "../constants/cartConstants"
+// import {CART_RESET} from "../constants/cartConstants"
 import axios from "axios"
               
 export const createOrder = (cart) => async (dispatch, getState) => {
@@ -45,7 +45,7 @@ export const createOrder = (cart) => async (dispatch, getState) => {
         dispatch({ type: ORDER_CREATE_SUCCESS, payload : data})
         console.log("order_create_success")
         // clean up the cart since order is placed
-        dispatch({ type: CART_RESET})
+        // dispatch({ type: CART_RESET})
         localStorage.setItem("cartItems", "")
         console.log("I finish create Order")
     } catch (error) {
