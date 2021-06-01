@@ -137,14 +137,14 @@ export default function OrderScreen({match, history}) {
                                 <ListGroup.Item>
                                     <Row>
                                         <Col> Items </Col>
-                                        <Col> ${order.itemsPrice}</Col>
+                                        <Col> ${order.itemsPrice.toFixed(2)}</Col>
                                     </Row>
                                 </ListGroup.Item>
                             
                                 <ListGroup.Item>
                                     <Row>
                                         <Col> 10% Shipping Fee (free for items over $1000) </Col>
-                                        <Col> ${order.shippingPrice}</Col>
+                                        <Col> ${order.shippingPrice.toFixed(2)}</Col>
                                     </Row>
                                 </ListGroup.Item>
 
