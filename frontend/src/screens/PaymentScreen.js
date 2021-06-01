@@ -57,10 +57,10 @@ export default function PaymentScreen({history}) {
                         </Form.Check>
                         <Form.Check 
                             type="radio" 
-                            label="Paypal" 
+                            label="PayPal" 
                             id="PayPal" 
                             name="paymentMethod" 
-                            value="Paypal"                             
+                            value="PayPal"                             
                             checked
                             onChange={(e) => setPaymentMethod(e.target.value)}> 
                         </Form.Check>
