@@ -108,6 +108,7 @@ export default function OrderScreen({ match, history }) {
     const successPaymentHandler = (paymentResult) => {
         console.log("paymentResult", paymentResult)
         dispatch(payOrder(orderId, paymentResult))
+        dispatch({ type: ORDER_LIST_MY_RESET });
     }
 
     const deliverHandler = () => {
