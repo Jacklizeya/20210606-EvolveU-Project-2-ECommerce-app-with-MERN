@@ -9,9 +9,11 @@ import {PayPalButton} from "react-paypal-button-v2"
 import Loader from "../components/Loader"
 import Message from "../components/Message"
 import {getOrderDetails, payOrder, deliverOrder} from "../actions/orderAction" 
-import {ORDER_PAY_RESET, ORDER_DELIVER_RESET} from "../constants/orderConstants"
-//                      This is a big mis-match, 20210520 one typo here
+import {ORDER_PAY_RESET, ORDER_DELIVER_RESET, ORDER_LIST_MY_RESET} from "../constants/orderConstants"
+import { PRODUCT_UPDATE_INSTOCK_RESET } from '../constants/productConstants';
 
+import { removeFromCart } from '../actions/cartAction';
+import { updateProductInStock } from '../actions/productAction';
 
 export default function OrderScreen({match, history}) {
     console.log("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
@@ -24,11 +26,15 @@ export default function OrderScreen({match, history}) {
     const { loading:  loadingDeliver, success: successDeliver} = useSelector(state => state.orderDeliver)  //this is second bug for 20210520
     const userLogin = useSelector(state => state.userLogin)
     const {userInfo} = userLogin
+    const cart = useSelector((state) => state.cart);
+    const { cartItems } = cart;
+    const [countInStock, setCountInStock] = useState(0);
 
     const dispatch = useDispatch()
 
     
     useEffect(()=>{ 
+        console.log("xxxxxxxxxxxxxxxxxxxxxentering useEffect once")
         if (!userInfo) {history.push("/login")}
         
         const addPayPalScript = async() => {
@@ -47,14 +53,56 @@ export default function OrderScreen({match, history}) {
         // tutorial makes it too complicated
         dispatch({type: ORDER_PAY_RESET}) 
         dispatch({type: ORDER_DELIVER_RESET}) 
-        dispatch(getOrderDetails(orderId))
-        if (!order || !order.isPaid) {if (!window.paypal) {addPayPalScript()} else {setSdkReady(true)}}
-        }, [orderId, dispatch, successPay, successDeliver])
+        dispatch({type: ORDER_LIST_MY_RESET });
+        console.log("line 50", sdkReady)
+        dispatch(getOrderDetails(orderId)) //async 74 continue here
+        console.log("ready to deal with paypal after get")
+        // console.log("order", order, order.isPaid)
+        // if (!order || !order.isPaid) {
+            console.log("order is not paid, going to setup SDK")
+            if (!window.paypal) {addPayPalScript(); console.log("sdkReady", sdkReady)} 
+            // else {setSdkReady(true)} This is the old one, seems not doing anything
+            console.log("line 56", "sdkReady", sdkReady)
+            setSdkReady(true)
+            console.log("line 58", "sdkReady", sdkReady)
+        // }
+        
+        if (successInStockUpdate) {
+            console.log('PRODUCT_UPDATE_INSTOCK_RESET');
+            dispatch({ type: PRODUCT_UPDATE_INSTOCK_RESET });
+        }
+
+        if (order && successPay) {
+            console.log('sale delete looping start');
+            order.orderItems.forEach((item, i) => {
+                //     console.log(
+                //         `countinstock: ${cartItems[i].countInStock}
+                //     -
+                //   qty: ${item.qty}
+                // Equals: ${cartItems[i].countInStock - item.qty}`
+                //     );
+                const updatedStock = cartItems[i].countInStock - item.qty;
+                setCountInStock(cartItems[i].countInStock - item.qty);
+                dispatch(
+                    updateProductInStock({
+                        _id: item.product,
+                        countInStock: updatedStock,
+                    })
+                );
+                dispatch(removeFromCart(item.product));
+                dispatch({ type: ORDER_PAY_RESET });
+            });
+            dispatch({ type: ORDER_LIST_MY_RESET });
+        }
+
+        }, [orderId, dispatch, successPay, successDeliver
+           ,history, userInfo, cartItems, countInStock, successInStockUpdate])
 
 
     const successPaymentHandler = (paymentResult) => {
         console.log("paymentResult", paymentResult)
         dispatch(payOrder(orderId, paymentResult))
+        dispatch({ type: ORDER_LIST_MY_RESET });
     }
 
     const deliverHandler = () => {

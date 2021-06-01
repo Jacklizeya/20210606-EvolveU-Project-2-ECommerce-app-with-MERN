@@ -47,7 +47,7 @@ export const orderDetailsReducer = (state = {order: [], shippingAddress: {}, loa
     switch(action.type) {
         case ORDER_DETAILS_REQUEST    : {
             console.log("DETAILS request")
-            return {...state, loading: true}
+            return {loading: true}
         }
         case ORDER_DETAILS_SUCCESS : {
             return { order: action.payload, loading: false }

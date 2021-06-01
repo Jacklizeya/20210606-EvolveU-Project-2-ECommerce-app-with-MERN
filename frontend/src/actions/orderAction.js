@@ -44,10 +44,10 @@ export const createOrder = (cart) => async (dispatch, getState) => {
         console.log("reply from database", data)
         dispatch({ type: ORDER_CREATE_SUCCESS, payload : data})
         console.log("order_create_success")
-        // clean up the effect
+        // clean up the cart since order is placed
         dispatch({ type: CART_RESET})
         localStorage.setItem("cartItems", "")
-        console.log("I updated Redux state")
+        console.log("I finish create Order")
     } catch (error) {
         console.log("entering error path")
         dispatch({type: ORDER_CREATE_FAIL, payload: error.response && error.response.data.message
@@ -76,7 +76,7 @@ export const getOrderDetails = (id) => async (dispatch, getState) => {
         
         dispatch({ type: ORDER_DETAILS_SUCCESS, payload : data})
         
-        console.log("I updated Redux state")
+        console.log("order details updated")
     } catch (error) {
         console.log("entering error path")
         dispatch({type: ORDER_DETAILS_FAIL, payload: error.response && error.response.data.message
