@@ -107,7 +107,7 @@ export default function ProductEditScreen( {match, history} ) {
 
                     <Form.Group controlId="price">
                         <Form.Label> Price </Form.Label>
-                        <Form.Control type="number" placeholder="Enter price" value={price} onChange={(e)=>{setPrice(e.target.value)}}/> 
+                        <Form.Control type="number" placeholder="Enter price" value={price.toFixed(2)} onChange={(e)=>{setPrice(e.target.value)}}/> 
                     </Form.Group> 
 
                     <Form.Group controlId="image">
@@ -148,7 +148,7 @@ export default function ProductEditScreen( {match, history} ) {
                         <Form.Control type="text" placeholder="Description" value={description} onChange={(e)=>{setDescription(e.target.value)}}/> 
                     </Form.Group> 
 
-                    <Button type="submit" variant="primary"> Update </Button>
+                    <Button type="submit" variant="primary" className='p-6 mt-2'> Update </Button>
                 </Form>
             )}
             
