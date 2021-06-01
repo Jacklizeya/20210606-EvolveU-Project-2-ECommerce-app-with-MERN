@@ -20,13 +20,14 @@ import {
     ORDER_DELIVER_FAIL,
     
 } from "../constants/orderConstants"
-
+import {CART_RESET} from "../constants/cartConstants"
 import axios from "axios"
               
 export const createOrder = (order) => async (dispatch, getState) => {
     console.log("Entering Thunk")
     try {
         // Initiate request
+        console.log("I am going to create order")
         console.log("entering the try path")    
         dispatch({ type: ORDER_CREATE_REQUEST })
         console.log("1st dispatch sent")
@@ -41,6 +42,7 @@ export const createOrder = (order) => async (dispatch, getState) => {
         const {data} = await axios.post("/api/orders", order, {headers : {"Content-Type": "application/json", "Authorization": `Bearer ${userInfo.token}`}} )
         console.log("reply from database", data)
         dispatch({ type: ORDER_CREATE_SUCCESS, payload : data})
+        dispatch({ type: CART_RESET})
         console.log("I updated Redux state")
     } catch (error) {
         console.log("entering error path")
