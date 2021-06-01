@@ -6,7 +6,8 @@ const {addOrderItems, getOrderById, updateOrderToPaid, getMyOrders, getOrders, u
 
 
 /* GET users listing. */
-router.route('/').post(protect, addOrderItems).get(protect, admin, getOrders)
+router.post('/', protect, addOrderItems)
+router.get("/", protect, admin, getOrders)
 router.get('/myorders', protect, getMyOrders)
 
 // !!!! Big bug on video 64, if I put 3rd route in front, it will think "myorders" as id! 

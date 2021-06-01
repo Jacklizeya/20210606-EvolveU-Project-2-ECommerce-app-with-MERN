@@ -48,7 +48,7 @@ export default function OrderScreen({match, history}) {
         dispatch({type: ORDER_PAY_RESET}) 
         dispatch({type: ORDER_DELIVER_RESET}) 
         dispatch(getOrderDetails(orderId))
-        if (!order.isPaid) {if (!window.paypal) {addPayPalScript()} else {setSdkReady(true)}}
+        if (!order || !order.isPaid) {if (!window.paypal) {addPayPalScript()} else {setSdkReady(true)}}
         }, [orderId, dispatch, successPay, successDeliver])
 
 

@@ -43,11 +43,11 @@ export default function PlaceOrderScreen({history}) {
         console.log("success on line24", success)
         useEffect(()=>{
             if (success) {
-                console.log("success")
+                console.log("success and order", success, order)
                 history.push(`/order/${order._id}`)
-                console.log("success")
+                console.log("jump to new page is done")
             }
-        }, [history, success, order])
+        }, [history, success])
 
 
     return (
