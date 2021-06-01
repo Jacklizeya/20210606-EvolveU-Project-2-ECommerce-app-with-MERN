@@ -11,8 +11,9 @@ import Message from "../components/Message"
 import { getOrderDetails, payOrder, deliverOrder } from "../actions/orderAction"
 import { ORDER_PAY_RESET, ORDER_DELIVER_RESET, ORDER_LIST_MY_RESET, } from "../constants/orderConstants";
 import { PRODUCT_UPDATE_INSTOCK_RESET } from '../constants/productConstants';
-import { removeFromCart } from '../actions/cartActions';
-import { updateProductInStock } from '../actions/productActions';
+
+import { removeFromCart } from '../actions/cartAction';
+import { updateProductInStock } from '../actions/productAction';
 
 
 
@@ -31,7 +32,7 @@ export default function OrderScreen({ match, history }) {
     const [countInStock, setCountInStock] = useState(0);
     const dispatch = useDispatch()
 
-    const productUpdateInStock = useSelector((state) => state.productUpdateStock);
+    const productUpdateInStock = useSelector((state) => state.productUpdateInStock);
     const { success: successInStockUpdate } = productUpdateInStock;
 
     const orderDeliver = useSelector((state) => state.orderDeliver);
@@ -56,10 +57,11 @@ export default function OrderScreen({ match, history }) {
 
         // I reoganize this part, we do not need order here! otherwise it is infinite loop 
         // tutorial makes it too complicated
-        dispatch({ type: ORDER_PAY_RESET })
-        dispatch({ type: ORDER_DELIVER_RESET })
-        dispatch(getOrderDetails(orderId))
-        if (!order.isPaid) { if (!window.paypal) { addPayPalScript() } else { setSdkReady(true) } }
+        if (!order || successPay || successDeliver || order._id !== orderId) {
+            dispatch({ type: ORDER_PAY_RESET })
+            dispatch({ type: ORDER_DELIVER_RESET })
+            dispatch(getOrderDetails(orderId))
+        } else if (!order.isPaid) { if (!window.paypal) { addPayPalScript() } else { setSdkReady(true) } }
 
 
         if (successInStockUpdate) {
