@@ -8,7 +8,7 @@ const Footer = () => {
         <Container> 
             <Row>
                 <Col className="text-center py-3">
-                    Address: #140B 3553 31 St NW, Calgary, Alberta, T2L 2K7 <br></br>
+                    Address: 3553 31 St NW, Calgary, Alberta, T2L 2K7 <br></br>
                     Phone: 403 452 2200
                 </Col>
             </Row>
