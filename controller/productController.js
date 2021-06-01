@@ -1,49 +1,50 @@
 const Product = require("../models/productModel")
 const asyncHandler = require("express-async-handler")
 
-const getProducts = asyncHandler (async (req, res, next) => {
+const getProducts = asyncHandler(async (req, res, next) => {
   const pageSize = 4
-  const page  = Number (req.query.pageNumber) || 1
-   
-  const keyword = req.query.keyword ? {name: {$regex: req.query.keyword, $options: "i"}} : {}
-  const category = req.query.category? {category: req.query.category} : {}
+  const page = Number(req.query.pageNumber) || 1
+
+  const keyword = req.query.keyword ? { name: { $regex: req.query.keyword, $options: "i" } } : {}
+  const category = req.query.category ? { category: req.query.category } : {}
   console.log("backend", page, keyword, category)
-  const count = await Product.countDocuments({...keyword, ...category})
-  const products = await Product.find({...keyword, ...category}).limit(pageSize).skip(pageSize * (page - 1))
-  
-    res.json({products, page, pages: Math.ceil(count/pageSize)});
-    })
+  const count = await Product.countDocuments({ ...keyword, ...category })
+  const products = await Product.find({ ...keyword, ...category }).limit(pageSize).skip(pageSize * (page - 1))
+
+  res.json({ products, page, pages: Math.ceil(count / pageSize) });
+})
 
 // @desc 
 // @route  GET API/PRODUCTS
 // @access Public
-const getProductById = asyncHandler (async function (req, res, next){
+const getProductById = asyncHandler(async function (req, res, next) {
 
 
-    const product = await Product.findById({_id : req.params.id})
-    if (product) {res.json(product)} else {
-      res.status(404);
-      throw new Error("product not found")
-    };
-    })
+  const product = await Product.findById({ _id: req.params.id })
+  if (product) { res.json(product) } else {
+    res.status(404);
+    throw new Error("product not found")
+  };
+})
 
 // @desc 
 // @route  DELETE API/PRODUCT/:ID
 // @access Private/admin
-const deleteProduct = asyncHandler (async function (req, res, next){
-  const product = await Product.findById({_id : req.params.id})
-  if (product) {await product.remove();
-    res.json({message: "product removed"})
+const deleteProduct = asyncHandler(async function (req, res, next) {
+  const product = await Product.findById({ _id: req.params.id })
+  if (product) {
+    await product.remove();
+    res.json({ message: "product removed" })
   } else {
     res.status(404);
     throw new Error("product not found")
   };
-  })
+})
 
 // @desc   Create product
 // @route  POST API/PRODUCTS
 // @access Private/admin
-const createProduct = asyncHandler (async function (req, res, next){
+const createProduct = asyncHandler(async function (req, res, next) {
   const product = await new Product({
     name: "sample name",
     price: 0,
@@ -58,16 +59,16 @@ const createProduct = asyncHandler (async function (req, res, next){
 
   const createdProduct = await product.save()
   res.status(201).json(createdProduct)
-  })
+})
 
 // @desc   Create product
 // @route  PUT API/PRODUCTS/:ID
 // @access Private/admin
-const updateProduct = asyncHandler (async function (req, res, next){
-  const {name, price, description, image, brand, category, countInStock} = req.body
+const updateProduct = asyncHandler(async function (req, res, next) {
+  const { name, price, description, image, brand, category, countInStock } = req.body
   const product = await Product.findById(req.params.id)
-  
- // the new information will come from post
+
+  // the new information will come from post
   if (product) {
     product.name = name
     product.price = price
@@ -76,47 +77,66 @@ const updateProduct = asyncHandler (async function (req, res, next){
     product.brand = brand
     product.category = category
     product.countInStock = countInStock
-   
+
     const updatedProduct = await product.save()
     res.json(updatedProduct)
-  } else {res.status(404); throw new Error("product no found")}
-  })
+  } else { res.status(404); throw new Error("product no found") }
+})
 
 
-  //  create new review
-  //  POST /api/products/:id/reviews
-  const createProductReview = asyncHandler (async function (req, res, next){
-    const {rating, comment} = req.body
-    const product = await Product.findById(req.params.id)
-    
-   // the new information will come from post
-    if (product) {
-      const alreadyReviewed = product.reviews.find(r => r.user.toString() === req.user._id.toString)
-      if (alreadyReviewed) {res.status(400); throw new Error ("product already reviewed")}
+//  create new review
+//  POST /api/products/:id/reviews
+const createProductReview = asyncHandler(async function (req, res, next) {
+  const { rating, comment } = req.body
+  const product = await Product.findById(req.params.id)
 
-      const review = {
-        name: req.user.name,
-        rating: Number(rating),
-        comment,
-        user: req.user._id
-      }
+  // the new information will come from post
+  if (product) {
+    const alreadyReviewed = product.reviews.find(r => r.user.toString() === req.user._id.toString)
+    if (alreadyReviewed) { res.status(400); throw new Error("product already reviewed") }
 
-      product.reviews.push(review)
-      product.numReviews = product.reviews.length
-      product.rating = product.reviews.reduce((acc, item) => item.rating + acc, 0) / product.reviews.length
-      await product.save()
-      res.status(201).json({message: "review added"})
-    } else {res.status(404); throw new Error("product no found")}
-    })
-  
-  //  get top rated product
-  //  get /api/products/top
-  //  Public: get top products
-  const getTopProducts = asyncHandler (async function (req, res, next){
-    console.log(" I want to get top products")
-    const products = await Product.find({}).sort({rating: -1}).limit(3)
-    console.log(" That is the products I got", products)
-    res.json(products)
-    })
+    const review = {
+      name: req.user.name,
+      rating: Number(rating),
+      comment,
+      user: req.user._id
+    }
 
-module.exports = {getProducts, getProductById, deleteProduct, createProduct, updateProduct, createProductReview, getTopProducts}
+    product.reviews.push(review)
+    product.numReviews = product.reviews.length
+    product.rating = product.reviews.reduce((acc, item) => item.rating + acc, 0) / product.reviews.length
+    await product.save()
+    res.status(201).json({ message: "review added" })
+  } else { res.status(404); throw new Error("product no found") }
+})
+
+//  get top rated product
+//  get /api/products/top
+//  Public: get top products
+const getTopProducts = asyncHandler(async function (req, res, next) {
+  console.log(" I want to get top products")
+  const products = await Product.find({}).sort({ rating: -1 }).limit(3)
+  console.log(" That is the products I got", products)
+  res.json(products)
+})
+
+// @desc    Update a product Instock number
+// @route   PUT /api/products/:id
+// @access  Private/Admin
+const updateProductInStock = asyncHandler(async (req, res) => {
+  const { countInStock } = req.body;
+
+  const product = await Product.findById(req.params.id);
+
+  if (product) {
+    product.countInStock = countInStock;
+
+    const updatedProductInStock = await product.save();
+    res.json(updatedProductInStock);
+  } else {
+    res.status(404);
+    throw new Error('Product not found unable update instock number');
+  }
+});
+
+module.exports = { getProducts, getProductById, deleteProduct, createProduct, updateProduct, createProductReview, getTopProducts, updateProductInStock }
