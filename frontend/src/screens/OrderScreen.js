@@ -61,6 +61,7 @@ export default function OrderScreen({ match, history }) {
             dispatch({ type: ORDER_PAY_RESET })
             dispatch({ type: ORDER_DELIVER_RESET })
             dispatch(getOrderDetails(orderId))
+            dispatch({ type: ORDER_LIST_MY_RESET });
         } else if (!order.isPaid) { if (!window.paypal) { addPayPalScript() } else { setSdkReady(true) } }
 
 
@@ -72,12 +73,12 @@ export default function OrderScreen({ match, history }) {
         if (order && successPay) {
             console.log('sale delete looping start');
             order.orderItems.forEach((item, i) => {
-                console.log(
-                    `countinstock: ${cartItems[i].countInStock}
-                -
-              qty: ${item.qty}
-            Equals: ${cartItems[i].countInStock - item.qty}`
-                );
+                //     console.log(
+                //         `countinstock: ${cartItems[i].countInStock}
+                //     -
+                //   qty: ${item.qty}
+                // Equals: ${cartItems[i].countInStock - item.qty}`
+                //     );
                 const updatedStock = cartItems[i].countInStock - item.qty;
                 setCountInStock(cartItems[i].countInStock - item.qty);
                 dispatch(
@@ -87,6 +88,7 @@ export default function OrderScreen({ match, history }) {
                     })
                 );
                 dispatch(removeFromCart(item.product));
+                dispatch({ type: ORDER_PAY_RESET });
             });
             dispatch({ type: ORDER_LIST_MY_RESET });
         }
