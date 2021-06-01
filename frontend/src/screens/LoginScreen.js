@@ -44,7 +44,7 @@ export default function LoginScreen( {location, history} ) {
                     <Form.Label> password  </Form.Label>
                     <Form.Control type="password" placeholder="Enter password" value={password} onChange={(e)=>{setPassword(e.target.value)}}/> 
                 </Form.Group>  
-                <Button type="submit" variant="primary"> Sign In </Button>
+                <Button type="submit" variant="primary" className='p-6 mt-2'> Sign In </Button>
             </Form>
 
             <Row className="py-3">
