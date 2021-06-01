@@ -85,7 +85,7 @@ export default function PlaceOrderScreen({history}) {
                                                 {item.name}
                                             </Col>
                                             <Col md={4}>
-                                                {item.qty} x ${item.price} = ${(item.qty * item.price).toFixed(2)}
+                                                {item.qty} x ${item.price.toFixed(2)} = ${(item.qty * item.price).toFixed(2)}
                                             </Col> 
                                         </Row>
                                     </ListGroup.Item>
@@ -105,28 +105,28 @@ export default function PlaceOrderScreen({history}) {
                             <ListGroup.Item>
                                 <Row>
                                     <Col> Items </Col>
-                                    <Col> ${cart.itemsPrice}</Col>
+                                    <Col> ${cart.itemsPrice.toFixed(2)}</Col>
                                 </Row>
                             </ListGroup.Item>
                           
                             <ListGroup.Item>
                                 <Row>
                                     <Col> 10% Shipping Fee (free for items over $1000) </Col>
-                                    <Col> ${cart.shippingPrice}</Col>
+                                    <Col> ${cart.shippingPrice.toFixed(2)}</Col>
                                 </Row>
                             </ListGroup.Item>
 
                             <ListGroup.Item>
                                 <Row>
                                     <Col> Tax </Col>
-                                    <Col> ${cart.taxPrice}</Col>
+                                    <Col> ${cart.taxPrice.toFixed(2)}</Col>
                                 </Row>
                             </ListGroup.Item>
 
                             <ListGroup.Item>
                                 <Row>
                                     <Col> Total </Col>
-                                    <Col> ${cart.totalPrice}</Col>
+                                    <Col> ${cart.totalPrice.toFixed(2)}</Col>
                                 </Row>
                             </ListGroup.Item>
 
@@ -137,7 +137,7 @@ export default function PlaceOrderScreen({history}) {
 
                             <ListGroup.Item>
                                 <Button type="button" className="btn-block" disabled={cart.cartItems===0} 
-                                onClick={placeOrderHandler}> PlaceOrder </Button>
+                                onClick={placeOrderHandler}> Place Order </Button>
                             </ListGroup.Item>
 
                         </ListGroup>
