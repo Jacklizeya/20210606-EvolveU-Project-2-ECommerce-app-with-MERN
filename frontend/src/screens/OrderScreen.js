@@ -14,7 +14,7 @@ import {ORDER_PAY_RESET, ORDER_DELIVER_RESET} from "../constants/orderConstants"
 
 
 export default function OrderScreen({match, history}) {
-    console.log("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
+    // console.log("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
 
     // set up all the initial state
     const orderId = match.params.id; console.log(`orderId is ${orderId}`)
