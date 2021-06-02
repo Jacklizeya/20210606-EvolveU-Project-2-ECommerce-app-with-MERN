@@ -8,8 +8,8 @@ const Footer = () => {
         <Container> 
             <Row>
                 <Col className="text-center py-3">
-                    Address: 3553 31 St NW, Calgary, Alberta, T2L 2K7 <br></br>
-                    Phone: 403 452 2200
+                    Address:  Calgary, Alberta, T2L 2K7 <br></br>
+                    Phone: 403 000 0000
                 </Col>
             </Row>
         </Container>
